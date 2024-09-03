@@ -27,8 +27,15 @@ jobs:
       - name: Obfuscate JavaScript files
         run: npm run obfuscate
 
-      - name: Upload obfuscated files
-        uses: actions/upload-artifact@v3
-        with:
-          name: obfuscated-js
-          path: dist/
+      - name: Replace original JS with obfuscated JS
+        run: |
+          rm -rf src/
+          mv dist/ src/
+
+      - name: Commit and push obfuscated files
+        run: |
+          git config --local user.name "GitHub Actions"
+          git config --local user.email "actions@github.com"
+          git add src/
+          git commit -m "Replace JS files with obfuscated versions"
+          git push origin main
